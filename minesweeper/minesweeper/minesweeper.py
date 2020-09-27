@@ -105,13 +105,22 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be mines.
         """
-        raise NotImplementedError
+        # Any time the number of cells is equal to the count,
+        # we know that all of that sentence’s cells must be mines.
+        if len(self.cells) == self.count:
+            return self.cells
+        return None
+
 
     def known_safes(self):
         """
         Returns the set of all cells in self.cells known to be safe.
         """
-        raise NotImplementedError
+        # Any time we have a sentence whose count is 0,
+        # we know that all of that sentence’s cells must be safe.
+        if self.count is 0:
+            return self.cells
+        return None
 
     def mark_mine(self, cell):
         """
