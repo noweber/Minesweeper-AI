@@ -215,8 +215,8 @@ class MinesweeperAI():
         # 3) Add a new sentence to the AI's knowledge base based on the value of `cell` and `count`
         self.knowledge.append(Sentence(self.__get_neighbors(cell), count))
         
-        # 4 & 5:
-        while True: # do-while loop (will always execute at least once)
+        # 4 & 5: within do-while loop (will always execute at least once)
+        while True: 
             original_knowledge = self.knowledge.copy()
             self.__infer_new_knowledge()
             if len(original_knowledge) is len(self.knowledge):
@@ -238,7 +238,8 @@ class MinesweeperAI():
             self.mines = self.mines.union(sentence.known_mines())   # This will add any newly discovered mines.
 
         # 5: Any time we have two sentences set1 = count1 and set2 = count2 where set1 is a subset of set2, then we can construct the new sentence set2 - set1 = count2 - count1.
-        inferred_knowledge = [] # Need to use a new list here else the current list of sentences could grow while iterating through it (it happened :))
+        # Note: need to use a new list here else the current list of sentences could grow while iterating through it (it happened :))
+        inferred_knowledge = []
         for sentence1 in self.knowledge:
             set1 = sentence1.cells
             for sentence2 in self.knowledge:
@@ -310,7 +311,8 @@ class MinesweeperAI():
             for j in range(self.width):
                 if (i, j) in self.mines:
                     continue
-                elif (i, j) in self.moves_made: # No need to include moves which have already been made
+                # No need to include moves which have already been made
+                elif (i, j) in self.moves_made:
                     continue
                 else:
                     moves_remaining.add((i, j))

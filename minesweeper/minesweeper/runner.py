@@ -212,11 +212,14 @@ while True:
 
     # Make move and update AI knowledge
     if move:
-        if game.is_mine(move):
-            lost = True
-        else:
-            nearby = game.nearby_mines(move)
-            revealed.add(move)
-            ai.add_knowledge(move, nearby)
+        while move is not None:
+            if game.is_mine(move):
+                lost = True
+            else:
+                nearby = game.nearby_mines(move)
+                revealed.add(move)
+                ai.add_knowledge(move, nearby)
+            flags = ai.mines.copy()
+            move = ai.make_safe_move()
 
     pygame.display.flip()
