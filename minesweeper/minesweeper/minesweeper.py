@@ -225,7 +225,7 @@ class MinesweeperAI():
 
     def __infer_new_knowledge(self):
         """
-        Private method to invert new knowledge using the existing knowledge set.
+        Private method to infer new knowledge using the existing knowledge set.
         Return value is void, but this method will update sentences within self.knowledge or add any inferred sentences.
         """
         # 4) Mark any additional cells as safe or as mines if it can be concluded based on the AI's knowledge base
