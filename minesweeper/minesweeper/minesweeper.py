@@ -224,33 +224,39 @@ class MinesweeperAI():
                 break
 
     def __infer_new_knowledge(self):
+        """
+        Private method to invert new knowledge using the existing knowledge set.
+        Return value is void, but this method will update sentences within self.knowledge or add any inferred sentences.
+        """
         # 4) Mark any additional cells as safe or as mines if it can be concluded based on the AI's knowledge base
         for safe in self.safes:
-            self.mark_safe(safe)
+            self.mark_safe(safe)    # This will update all sentences for any known safes.
         for mine in self.mines:
-            self.mark_mine(mine)
+            self.mark_mine(mine)    # This will update all sentences for any known mines.
         for sentence in self.knowledge:
-            self.safes = self.safes.union(sentence.known_safes())
-            self.mines = self.mines.union(sentence.known_mines())
+            self.safes = self.safes.union(sentence.known_safes())   # This will any newly discovered safes.
+            self.mines = self.mines.union(sentence.known_mines())   # This will any newly discovered mines.
 
         # 5: Any time we have two sentences set1 = count1 and set2 = count2 where set1 is a subset of set2, then we can construct the new sentence set2 - set1 = count2 - count1.
-        inferred_knowledge = [] # Need to use a new list here else the current list could grow while iterating through it
+        inferred_knowledge = [] # Need to use a new list here else the current list of sentences could grow while iterating through it (it happened :))
         for sentence1 in self.knowledge:
             set1 = sentence1.cells
             for sentence2 in self.knowledge:
                 set2 = sentence2.cells
-                if set1.issubset(set2):
+                if set1 is not set2 and set1.issubset(set2): 
                     inferred_sentence = Sentence(set2 - set1, sentence2.count - sentence1.count)
                     if inferred_sentence not in inferred_knowledge:
+                        # Avoid adding duplicate sentences as this will just slow things down.
                         inferred_knowledge.append(inferred_sentence)
         for sentence in inferred_knowledge:
+            # Only add an inferred sentence if it is new knowledge.
             if sentence not in self.knowledge:
                 self.knowledge.append(sentence)
         
     def __get_neighbors(self, cell):
         """
         Private method to retrieve all neighboring cells of a given cell.
-        Returns a set of (i, j) 2-tuples representing the cells.
+        Returns a set of (i, j) 2-tuples representing the neighboring cells.
         """
         neighbors = set()
         for i in range(cell[0] - 1, cell[0] + 2):
@@ -314,8 +320,8 @@ class MinesweeperAI():
         
     def __has_no_moves_remaining(self):
         """
-        Private method to determine whether or not any new moves can be made (without knowingly clicking a mine)
-        Return true if there are no moves remaining.
+        Private (the Python version of private) method to determine whether or not any new moves can be made (without knowingly clicking a mine)
+        Return true if there are no moves remaining (when every non-mine cell move has been made)
         Returns false if there are moves remaining.
         """
         return len(self.moves_made) + len(self.mines) is self.height * self.width
