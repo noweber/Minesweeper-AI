@@ -192,7 +192,6 @@ class MinesweeperAI():
         print("add_knowledge")
         # raise NotImplementedError
 
-    # TODO:
     def make_safe_move(self):
         """
         Returns a safe cell to choose on the Minesweeper board.
@@ -217,7 +216,7 @@ class MinesweeperAI():
         safe_move = random.sample(safe_moves, 1)[0]
 
         # Update made and remaining moves before returning the move:
-        self._make_move(safe_move)
+        self.__store_move(safe_move)
         return safe_move
 
     def make_random_move(self):
@@ -238,10 +237,10 @@ class MinesweeperAI():
         random_move = random.sample(possibly_safe_moves, 1)[0]
 
         # Update made and remaining moves before returning the move:
-        self._make_move(random_move)
+        self.__store_move(random_move)
         return random_move
 
-    def _make_move(self, move):
+    def __store_move(self, move):
         """
         Private method to update the object's state to store the move as having been made.
         First removes the move from the set of remaining moves,
