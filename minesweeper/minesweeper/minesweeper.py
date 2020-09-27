@@ -142,6 +142,12 @@ class MinesweeperAI():
         # Keep track of which cells have been clicked on
         self.moves_made = set()
 
+        # Initialize a set of cells which can still be clicked on
+        self.moves_remaining = set()
+        for i in range(self.height):
+            for j in range(self.width):
+                self.moves_remaining.add((i, j))
+
         # Keep track of cells known to be safe or mines
         self.mines = set()
         self.safes = set()
@@ -182,8 +188,10 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
-        raise NotImplementedError
+        print("add_knowledge")
+        # raise NotImplementedError
 
+    # TODO:
     def make_safe_move(self):
         """
         Returns a safe cell to choose on the Minesweeper board.
@@ -193,7 +201,7 @@ class MinesweeperAI():
         This function may use the knowledge in self.mines, self.safes
         and self.moves_made, but should not modify any of those values.
         """
-        raise NotImplementedError
+        return None
 
     def make_random_move(self):
         """
@@ -202,4 +210,17 @@ class MinesweeperAI():
             1) have not already been chosen, and
             2) are not known to be mines
         """
-        raise NotImplementedError
+        # If there are no moves remaining, return None.
+        if(len(self.moves_remaining) is 0):
+            return None
+
+        # Get the set of moves remaining which might be safe (and none which are known to be mines)
+        possibly_safe_moves = self.moves_remaining - self.mines
+
+        # Select a random possibly safe move:
+        random_move = random.sample(possibly_safe_moves, 1)[0]
+
+        # Update the object state to store this move as made and remove it from remaining moves before returning it:
+        self.moves_remaining.remove(random_move)
+        self.moves_made.add(random_move)
+        return random_move
