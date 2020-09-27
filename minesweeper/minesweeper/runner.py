@@ -4,9 +4,9 @@ import time
 
 from minesweeper import Minesweeper, MinesweeperAI
 
-HEIGHT = 4
-WIDTH = 4
-MINES = 2
+HEIGHT = 8
+WIDTH = 8
+MINES = 8
 
 # Colors
 BLACK = (0, 0, 0)
