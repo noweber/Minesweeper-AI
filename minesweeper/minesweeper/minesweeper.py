@@ -118,14 +118,29 @@ class Sentence():
         Updates internal knowledge representation given the fact that
         a cell is known to be a mine.
         """
-        raise NotImplementedError
+        # If our AI knew the sentence {A, B, C} = 2, and we were told that C is a mine,
+        # we could remove C from the sentence and decrease the value of count (since C was a mine that contributed to that count),
+        # giving us the sentence {A, B} = 1. This is logical: 
+        # if two out of A, B, and C are mines, and we know that C is a mine, 
+        # then it must be the case that out of A and B, exactly one of them is a mine.
+        if cell in self.cells:
+            # If the mine is in the Sentence, remove it and decrement the count.
+            self.cells.remove(cell)
+            self.count = self.count - 1
+
 
     def mark_safe(self, cell):
         """
         Updates internal knowledge representation given the fact that
         a cell is known to be safe.
         """
-        raise NotImplementedError
+        # For example, if our AI knew the sentence {A, B, C} = 2, we don’t yet have enough information to conclude anything.
+        # But if we were told that C were safe, we could remove C from the sentence altogether,
+        # leaving us with the sentence {A, B} = 2 (which, incidentally, does let us draw some new conclusions.)
+        if cell in self.cells:
+
+            # If the cell is safe, we can simply remove it from the sentence per the above example.
+            self.cells.remove(cell)
 
 
 class MinesweeperAI():
@@ -190,6 +205,10 @@ class MinesweeperAI():
                if they can be inferred from existing knowledge
         """
         print("add_knowledge")
+        
+
+        # Update made and remaining moves before returning the move:
+        self.__store_move(cell)
         # raise NotImplementedError
 
     def make_safe_move(self):
@@ -215,8 +234,6 @@ class MinesweeperAI():
         # Select a random safe move:
         safe_move = random.sample(safe_moves, 1)[0]
 
-        # Update made and remaining moves before returning the move:
-        self.__store_move(safe_move)
         return safe_move
 
     def make_random_move(self):
@@ -236,8 +253,6 @@ class MinesweeperAI():
         # Select a random possibly safe move:
         random_move = random.sample(possibly_safe_moves, 1)[0]
 
-        # Update made and remaining moves before returning the move:
-        self.__store_move(random_move)
         return random_move
 
     def __store_move(self, move):
