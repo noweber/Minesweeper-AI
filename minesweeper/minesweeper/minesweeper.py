@@ -245,7 +245,6 @@ class MinesweeperAI():
                         inferred_knowledge.append(inferred_sentence)
         for sentence in inferred_knowledge:
             if sentence not in self.knowledge:
-                print("inferring knowledge: " + str(sentence))
                 self.knowledge.append(sentence)
         
     def __get_neighbors(self, cell):
