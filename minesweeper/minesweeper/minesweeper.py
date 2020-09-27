@@ -234,8 +234,8 @@ class MinesweeperAI():
         for mine in self.mines:
             self.mark_mine(mine)    # This will update all sentences for any known mines.
         for sentence in self.knowledge:
-            self.safes = self.safes.union(sentence.known_safes())   # This will any newly discovered safes.
-            self.mines = self.mines.union(sentence.known_mines())   # This will any newly discovered mines.
+            self.safes = self.safes.union(sentence.known_safes())   # This will add any newly discovered safes.
+            self.mines = self.mines.union(sentence.known_mines())   # This will add any newly discovered mines.
 
         # 5: Any time we have two sentences set1 = count1 and set2 = count2 where set1 is a subset of set2, then we can construct the new sentence set2 - set1 = count2 - count1.
         inferred_knowledge = [] # Need to use a new list here else the current list of sentences could grow while iterating through it (it happened :))
