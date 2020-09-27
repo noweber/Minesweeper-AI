@@ -142,7 +142,8 @@ class MinesweeperAI():
         # Keep track of which cells have been clicked on
         self.moves_made = set()
 
-        # Initialize a set of cells which can still be clicked on
+        # Initialize a set of cells representing all remaining moves.
+        # This set is used to optimize the making safe and random moves.
         self.moves_remaining = set()
         for i in range(self.height):
             for j in range(self.width):
@@ -201,7 +202,23 @@ class MinesweeperAI():
         This function may use the knowledge in self.mines, self.safes
         and self.moves_made, but should not modify any of those values.
         """
-        return None
+        # If there are no moves remaining, return None.
+        if(len(self.moves_remaining) is 0):
+            return None
+
+        # Get the set of known safe moves
+        safe_moves = self.safes - self.mines - self.moves_made
+
+        # Return None if there are no safe moves:
+        if len(safe_moves) is 0:
+            return None
+
+        # Select a random safe move:
+        safe_move = random.sample(safe_moves, 1)[0]
+
+        # Update made and remaining moves before returning the move:
+        self._make_move(safe_move)
+        return safe_move
 
     def make_random_move(self):
         """
@@ -215,12 +232,20 @@ class MinesweeperAI():
             return None
 
         # Get the set of moves remaining which might be safe (and none which are known to be mines)
-        possibly_safe_moves = self.moves_remaining - self.mines
+        possibly_safe_moves = self.moves_remaining - self.mines - self.moves_made
 
         # Select a random possibly safe move:
         random_move = random.sample(possibly_safe_moves, 1)[0]
 
-        # Update the object state to store this move as made and remove it from remaining moves before returning it:
-        self.moves_remaining.remove(random_move)
-        self.moves_made.add(random_move)
+        # Update made and remaining moves before returning the move:
+        self._make_move(random_move)
         return random_move
+
+    def _make_move(self, move):
+        """
+        Private method to update the object's state to store the move as having been made.
+        First removes the move from the set of remaining moves,
+        Then adds the move to the set of moves made.
+        """
+        self.moves_remaining.remove(move)
+        self.moves_made.add(move)
