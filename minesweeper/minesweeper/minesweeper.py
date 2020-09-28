@@ -267,7 +267,7 @@ class MinesweeperAI():
                 if (i, j) == cell:
                     continue
 
-                # Update count if cell in bounds and is mine
+                # Add neighbor if cell in bounds and is not in self.moves_made
                 if 0 <= i < self.height and 0 <= j < self.width:
                     if (i, j) not in self.moves_made:
                         neighbors.add((i, j))
